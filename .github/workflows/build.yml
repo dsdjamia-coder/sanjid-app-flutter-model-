@@ -1,49 +1,66 @@
-name: Build Flutter App
+# വർക്ക്ഫ്ലോയുടെ പേര്
+name: Build & Release App (APK & Web)
 
+# എപ്പോഴാണ് ഇത് പ്രവർത്തിക്കേണ്ടത്?
 on:
   push:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+    branches: [ "main", "master" ] # മെയിൻ ബ്രാഞ്ചിൽ കോഡ് അപ്‌ഡേറ്റ് ചെയ്യുമ്പോൾ
+  workflow_dispatch: # മാനുവൽ ആയി റൺ ചെയ്യാനും
+
+# GitHub-ന് കൊടുക്കേണ്ട അനുവാദങ്ങൾ (Permissions)
+permissions:
+  contents: write # റിലീസ് (APK) അപ്‌ലോഡ് ചെയ്യാൻ
+  pages: write    # വെബ്സൈറ്റ് അപ്‌ഡേറ്റ് ചെയ്യാൻ
+  id-token: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_and_release:
+    runs-on: ubuntu-latest # ലനക്സ് സിസ്റ്റത്തിലാണ് ഇത് പ്രവർത്തിക്കുന്നത്
 
     steps:
+      # 1. നിങ്ങളുടെ GitHub-ൽ ഉള്ള കോഡ് എടുക്കുന്നു
       - uses: actions/checkout@v4
 
+      # 2. ആൻഡ്രോയിഡ് ആപ്പ് നിർമ്മിക്കാൻ ആവശ്യമായ Java സെറ്റ് ചെയ്യുന്നു
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
+      # 3. Flutter ഇൻസ്റ്റാൾ ചെയ്യുന്നു
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
+      # 4. ആപ്പിന് ആവശ്യമായ പാക്കേജുകൾ (Dependencies) ഡൗൺലോഡ് ചെയ്യുന്നു
       - name: Install Dependencies
         run: flutter pub get
 
-      # 1. APK നിർമ്മിക്കുന്നു
+      # 5. ആൻഡ്രോയിഡ് ആപ്പ് (APK) നിർമ്മിക്കുന്നു
       - name: Build APK
         run: flutter build apk --release
 
-      # 2. Web App നിർമ്മിക്കുന്നു
+      # 6. വെബ്സൈറ്റ് ഫയലുകൾ നിർമ്മിക്കുന്നു
+      # ശ്രദ്ധിക്കുക: നിങ്ങളുടെ GitHub ലിങ്ക് ശരിയാവാൻ '--base-href' കൃത്യമായി നൽകണം
       - name: Build Web
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/sanjid-app-flutter-/"
 
-      # 3. APK അപ്‌ലോഡ് ചെയ്യുന്നു (നിങ്ങൾക്ക് ഡൗൺലോഡ് ചെയ്യാൻ)
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      # 7. വെബ് ഫയലുകൾ 'gh-pages' എന്ന ബ്രാഞ്ചിലേക്ക് മാറ്റുന്നു (വെബ്സൈറ്റ് ഹോസ്റ്റിംഗിന്)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: my-app-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
 
-      # 4. Web Files അപ്‌ലോഡ് ചെയ്യുന്നു
-      - name: Upload Web Build
-        uses: actions/upload-artifact@v4
+      # 8. നിർമ്മിച്ച APK ഫയൽ 'Releases' പേജിലേക്ക് അപ്‌ലോഡ് ചെയ്യുന്നു
+      # ഓരോ തവണയും വേർഷൻ നമ്പർ ഓട്ടോമാറ്റിക് ആയി മാറും (ഉദാ: v1.0.1, v1.0.2)
+      - name: Create Release & Upload APK
+        uses: ncipollo/release-action@v1
         with:
-          name: my-web-app
-          path: build/web/
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+          tag: "v1.0.${{ github.run_number }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          replacesArtifacts: true
