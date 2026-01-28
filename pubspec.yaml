@@ -1,46 +1,22 @@
-name: your_app_name
-description: A Flutter application migrated from 2023 project to latest Flutter.
-
-publish_to: "none"
-
+name: my_counter_app
+description: A simple Flutter Counter App for learning.
+# ആപ്പിന്റെ വേർഷൻ
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-
-  # iOS style icons
-  cupertino_icons: ^1.0.8
-
-  # Firebase
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  cloud_firestore: ^4.14.0
-
-  # File & path utilities
-  path_provider: ^2.1.1
-  open_file: ^3.3.2
-
-  # Web / HTML support (if used in old project)
-  universal_html: ^2.2.4
+  # ഐക്കണുകൾക്ക് വേണ്ടിയുള്ള പാക്കേജ്
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # Lints (modern Flutter)
-  flutter_lints: ^6.0.0
-
-  # App icon generator (optional)
-  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^2.0.0
 
 flutter:
+  # മെറ്റീരിയൽ ഡിസൈൻ (Google Style) ഉപയോഗിക്കാൻ
   uses-material-design: true
-
-  # Uncomment and adjust if you use assets
-  # assets:
-  #   - assets/
-  #   - assets/images/
