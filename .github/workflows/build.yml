@@ -1,62 +1,38 @@
-# വർക്ക്ഫ്ലോയുടെ പേര്
-name: Build & Release App (Arm64 Only)
+name: my_counter_app
+description: A simple Flutter Counter App.
+version: 1.0.0+1
+publish_to: 'none'
 
-# എപ്പോഴാണ് ഇത് പ്രവർത്തിക്കേണ്ടത്?
-on:
-  push:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+environment:
+  sdk: '>=3.0.0 <4.0.0'
 
-# അനുവാദങ്ങൾ
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
 
-jobs:
-  build_and_release:
-    runs-on: ubuntu-latest
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  # ഐക്കൺ മാറ്റാനുള്ള പാക്കേജ് നമ്മൾ ഇവിടെ ചേർക്കുന്നു
+  flutter_launcher_icons: "^0.13.1"
 
-    steps:
-      - uses: actions/checkout@v4
+flutter:
+  uses-material-design: true
+  
+  # ആപ്പിൽ ഉപയോഗിക്കുന്ന ചിത്രങ്ങളുടെ ഫോൾഡർ ഇവിടെ പറയണം
+  assets:
+    - assets/
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
-      - name: Install Dependencies
-        run: flutter pub get
-
-      # 5. ആൻഡ്രോയിഡ് ആപ്പ് (APK) നിർമ്മിക്കുന്നു
-      # '--split-per-abi' ഉപയോഗിച്ച് വെവ്വേറെ ഫയലുകൾ ഉണ്ടാക്കുന്നു
-      - name: Build Split APKs
-        run: flutter build apk --release --split-per-abi
-
-      # 6. വെബ്സൈറ്റ് ഫയലുകൾ നിർമ്മിക്കുന്നു
-      - name: Build Web
-        run: flutter build web --release --base-href "/sanjid-app-flutter-/"
-
-      # 7. വെബ്സൈറ്റ് ഡിപ്ലോയ് ചെയ്യുന്നു
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-
-      # 8. നിർമ്മിച്ചവയിൽ നിന്ന് 'arm64' ഫയൽ മാത്രം തിരഞ്ഞ് അപ്‌ലോഡ് ചെയ്യുന്നു
-      # മാറ്റം: ഇവിടെ ഫയലിന്റെ പേര് കൃത്യമായി പറഞ്ഞിട്ടുണ്ട് (*arm64-v8a-release.apk)
-      - name: Create Release & Upload APK
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/flutter-apk/*arm64-v8a-release.apk"
-          tag: "v1.0.${{ github.run_number }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
-          replacesArtifacts: true
+# ഐക്കൺ എവിടെയാണെന്നും എന്താണ് ചെയ്യേണ്ടതെന്നും ഇവിടെ സെറ്റ് ചെയ്യുന്നു
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png" # നമ്മൾ അപ്‌ലോഡ് ചെയ്ത ചിത്രത്തിന്റെ പാത്ത്
+  min_sdk_android: 21 # പുതിയ ആൻഡ്രോയിഡ് വേർഷനുകൾക്ക് വേണ്ടി
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+    background_color: "#hex_code" # വെബ്സൈറ്റിന്റെ പശ്ചാത്തല നിറം വേണമെങ്കിൽ നൽകാം
+    theme_color: "#hex_code"
