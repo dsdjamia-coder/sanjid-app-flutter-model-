@@ -1,7 +1,7 @@
 name: my_counter_app
-description: A simple Flutter Counter App for learning.
-# ആപ്പിന്റെ വേർഷൻ
+description: A simple Flutter Counter App.
 version: 1.0.0+1
+publish_to: 'none'
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -9,14 +9,30 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # ഐക്കണുകൾക്ക് വേണ്ടിയുള്ള പാക്കേജ്
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  # ഐക്കൺ മാറ്റാനുള്ള പാക്കേജ് നമ്മൾ ഇവിടെ ചേർക്കുന്നു
+  flutter_launcher_icons: "^0.13.1"
 
 flutter:
-  # മെറ്റീരിയൽ ഡിസൈൻ (Google Style) ഉപയോഗിക്കാൻ
   uses-material-design: true
+  
+  # ആപ്പിൽ ഉപയോഗിക്കുന്ന ചിത്രങ്ങളുടെ ഫോൾഡർ ഇവിടെ പറയണം
+  assets:
+    - assets/
+
+# ഐക്കൺ എവിടെയാണെന്നും എന്താണ് ചെയ്യേണ്ടതെന്നും ഇവിടെ സെറ്റ് ചെയ്യുന്നു
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png" # നമ്മൾ അപ്‌ലോഡ് ചെയ്ത ചിത്രത്തിന്റെ പാത്ത്
+  min_sdk_android: 21 # പുതിയ ആൻഡ്രോയിഡ് വേർഷനുകൾക്ക് വേണ്ടി
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+    background_color: "#hex_code" # വെബ്സൈറ്റിന്റെ പശ്ചാത്തല നിറം വേണമെങ്കിൽ നൽകാം
+    theme_color: "#hex_code"
