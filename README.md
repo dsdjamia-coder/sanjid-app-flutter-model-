@@ -1,16 +1,25 @@
-# sanjid_app
+ആപ്പിന്റെ പേര് മാറ്റുക
 
-A new Flutter project.
+ആവശ്യം: ഫോണിൽ ഇൻസ്റ്റാൾ ചെയ്യുമ്പോൾ 'Flutter App' എന്നതിന് പകരം സ്വന്തം പേര് വരണം.
+പരിഹാരം:
 
-## Getting Started
+ആൻഡ്രോയിഡിൽ: AndroidManifest.xml എന്ന ഫയലിൽ android:label എന്ന ഭാഗത്ത് മാറ്റം വരുത്തുക.
 
-This project is a starting point for a Flutter application.
+വെബ്സൈറ്റിൽ: web/index.html എന്ന ഫയലിൽ <title> ടാഗിൽ മാറ്റം വരുത്തുക.
 
-A few resources to get you started if this is your first Flutter project:
+ആപ്പിന്റെ ലോഗോ (Icon) മാറ്റുക
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+ആവശ്യം: ഫ്ലട്ടറിന്റെ ലോഗോ മാറ്റി സ്വന്തം ലോഗോ വയ്ക്കണം.
+പരിഹാരം: flutter_launcher_icons എന്ന പാക്കേജ് ഉപയോഗിക്കുക. നിങ്ങളുടെ ലോഗോ assets ഫോൾഡറിൽ അപ്‌ലോഡ് ചെയ്ത ശേഷം, അതിന്റെ പാത്ത് കോൺഫിഗറേഷൻ ഫയലിൽ നൽകുക. GitHub Action പ്രവർത്തിക്കുമ്പോൾ ഇത് ഓട്ടോമാറ്റിക് ആയി സെറ്റ് ചെയ്യപ്പെടും.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+APK ഫയലിന്റെ പേര് മാറ്റുക
+
+ആവശ്യം: ഡൗൺലോഡ് ചെയ്യുമ്പോൾ app-release.apk എന്ന പേര് മാറ്റി MyApp.apk എന്ന് വരണം.
+പരിഹാരം: GitHub Action-ൽ (build.yml) ഒരു Rename Command (mv command) ചേർക്കുക. നിർമ്മിച്ച ഫയലിനെ അപ്‌ലോഡ് ചെയ്യുന്നതിന് തൊട്ടുമുമ്പ് പേര് മാറ്റാൻ ഇതിലൂടെ സാധിക്കും.
+
+
+
+ലൈവ് വെബ്സൈറ്റ് ലിങ്ക്
+
+ആവശ്യം: ഇൻസ്റ്റാൾ ചെയ്യാതെ തന്നെ ആപ്പ് കാണിക്കാൻ ഒരു ലിങ്ക് വേണം.
+പരിഹാരം: GitHub Settings-ൽ Pages എന്ന ഓപ്ഷൻ ആക്റ്റീവ് ആക്കുക. build.yml വഴി നിർമ്മിക്കപ്പെടുന്ന വെബ് ഫയലുകൾ gh-pages എന്ന ബ്രാഞ്ചിലേക്ക് മാറ്റുന്നതോടെ നിങ്ങൾക്ക് ഒരു സ്ഥിരമായ വെബ്സൈറ്റ് ലിങ്ക് ലഭിക്കും.
