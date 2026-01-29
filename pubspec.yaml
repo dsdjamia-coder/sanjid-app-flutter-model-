@@ -1,5 +1,5 @@
-name: my_counter_app
-description: A simple Flutter Counter App.
+name: DSD_003_eg
+description: A simple Flutter എഗ്സംബിൾ App.
 version: 1.0.0+1
 publish_to: 'none'
 
@@ -36,3 +36,4 @@ flutter_launcher_icons:
     image_path: "assets/icon.png"
     background_color: "#hex_code" # വെബ്സൈറ്റിന്റെ പശ്ചാത്തല നിറം വേണമെങ്കിൽ നൽകാം
     theme_color: "#hex_code"
+
