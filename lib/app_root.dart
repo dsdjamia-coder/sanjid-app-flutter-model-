@@ -10,7 +10,7 @@ class AppRoot extends StatelessWidget {
     // MaterialApp ആണ് ഫ്ലട്ടർ ആപ്പിന്റെ അടിസ്ഥാനം
     return MaterialApp(
       // ആപ്പിന്റെ പേര് (Recent apps list-ൽ കാണുന്നത്)
-      title: 'My Counter App',
+      title: 'DSD_003_eg',
       
       // ഡീബഗ് ബാനർ ഒഴിവാക്കാൻ
       debugShowCheckedModeBanner: false,
