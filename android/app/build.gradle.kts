@@ -32,8 +32,21 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // --- മാറ്റങ്ങൾ വരുത്തിയത് ഇവിടെയാണ് ---
+            
+            // 1. കോഡ് ചുരുക്കാൻ (Minify) നിർദ്ദേശം നൽകുന്നു
+            isMinifyEnabled = true
+            
+            // 2. ആവശ്യമില്ലാത്ത ചിത്രങ്ങളും ഫയലുകളും നീക്കം ചെയ്യുന്നു (Shrink)
+            isShrinkResources = true
+            
+            // പ്രോഗാർഡ് നിയമങ്ങൾ (ഇത് സുരക്ഷയ്ക്കും സൈസ് കുറയ്ക്കാനും സഹായിക്കും)
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            // Signing config
             signingConfig = signingConfigs.getByName("debug")
         }
     }
