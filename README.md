@@ -11,8 +11,8 @@
 * **എവിടെ മാറ്റണം?:** `.github/workflows/build.yml`
 * **എന്ത് മാറ്റണം?:**
 താഴെ കാണുന്ന വരി കണ്ടുപിടിക്കുക:
-`run: flutter build web --release --base-href "/sanjid-app-flutter-/"`
-ഇതിലെ `"/sanjid-app-flutter-/"` എന്നത് മാറ്റി നിങ്ങളുടെ പുതിയ Repository-യുടെ പേര് നൽകുക.
+`run: flutter build web --release --base-href "/sanjid-app-flutter-model-/"`
+ഇതിലെ `"/sanjid-app-flutter-model-/"` എന്നത് മാറ്റി നിങ്ങളുടെ പുതിയ Repository-യുടെ പേര് നൽകുക.
 ഉദാഹരണത്തിന്: `"/new-project/"`
 
 ---
@@ -137,3 +137,4 @@ ___________________________________________________________________________
 3. **`assets/icon.png`** -> പഴയ ചിത്രം ഡിലീറ്റ് ചെയ്ത് പുതിയത് (അതേ പേരിൽ) അപ്‌ലോഡ് ചെയ്യുക.
 
 ഇത്രയും ചെയ്താൽ പുതിയ ബ്രാൻഡിംഗോട് കൂടി ആപ്പ് റെഡി!
+
