@@ -47,7 +47,7 @@ jobs:
 
       # 3. വെബ്സൈറ്റ് ബിൽഡ് ചെയ്യുന്നു
       - name: Build Web
-        run: flutter build web --release --base-href "/sanjid-app-flutter-/"
+        run: flutter build web --release --base-href "/sanjid-app-flutter-model-/"
 
       # 4. വെബ്സൈറ്റ് അപ്‌ലോഡ് ചെയ്യുന്നു
       - name: Deploy to GitHub Pages
