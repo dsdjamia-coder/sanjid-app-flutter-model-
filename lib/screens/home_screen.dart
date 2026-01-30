@@ -1,62 +1,178 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-// ഇത് ഒരു StatefulWidget ആണ്. കാരണം സ്ക്രീനിലെ നമ്പർ മാറിക്കൊണ്ടിരിക്കണം.
-class HomeScreen extends StatefulWidget {
-  // പുറത്ത് നിന്ന് ലഭിക്കുന്ന തലക്കെട്ട് (Title) സൂക്ഷിക്കാൻ
-  final String title;
-
-  const HomeScreen({super.key, required this.title});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+void main() {
+  runApp(const FlappyApp());
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // കൗണ്ടർ നമ്പറിനെ ഓർത്തു വെക്കാനുള്ള വേരിയബിൾ. തുടക്കം 0.
-  int _counter = 0;
+class FlappyApp extends StatelessWidget {
+  const FlappyApp({super.key});
 
-  // നമ്പർ കൂട്ടാനുള്ള ഫംഗ്‌ഷൻ
-  void _incrementCounter() {
-    // setState എന്ന് വിളിച്ചാൽ മാത്രമേ സ്ക്രീൻ പുതുക്കുകയുള്ളൂ (Refresh).
-    setState(() {
-      _counter++; // കൗണ്ടർ 1 വെച്ച് കൂട്ടുന്നു
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: FlappyGame(),
+    );
+  }
+}
+
+class FlappyGame extends StatefulWidget {
+  const FlappyGame({super.key});
+
+  @override
+  State<FlappyGame> createState() => _FlappyGameState();
+}
+
+class _FlappyGameState extends State<FlappyGame> {
+  double birdY = 0;
+  double birdVelocity = 0;
+  final double gravity = 0.004;
+  final double jumpForce = -0.06;
+
+  double pipeX = 1.5;
+  double pipeGap = 0.35;
+  double pipeHeight = 0.3;
+
+  bool gameStarted = false;
+  bool gameOver = false;
+  int score = 0;
+
+  Timer? gameTimer;
+
+  void startGame() {
+    gameStarted = true;
+    gameOver = false;
+    score = 0;
+    birdY = 0;
+    birdVelocity = 0;
+    pipeX = 1.5;
+
+    gameTimer?.cancel();
+    gameTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      setState(() {
+        birdVelocity += gravity;
+        birdY += birdVelocity;
+
+        pipeX -= 0.02;
+        if (pipeX < -1.5) {
+          pipeX = 1.5;
+          score++;
+        }
+
+        if (birdY > 1 || birdY < -1) {
+          endGame();
+        }
+
+        if (pipeX.abs() < 0.15) {
+          if (birdY < -pipeGap + pipeHeight ||
+              birdY > pipeGap - pipeHeight) {
+            endGame();
+          }
+        }
+      });
     });
+  }
+
+  void jump() {
+    if (!gameStarted) {
+      startGame();
+    } else if (!gameOver) {
+      birdVelocity = jumpForce;
+    }
+  }
+
+  void endGame() {
+    gameTimer?.cancel();
+    gameOver = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold എന്നത് ഒരു പേജിന്റെ അടിസ്ഥാന ഘടനയാണ് (AppBar, Body, etc.)
-    return Scaffold(
-      // മുകളിലെ നീല ബാർ (AppBar)
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title), // മുകളിൽ സെറ്റ് ചെയ്ത തലക്കെട്ട് ഇവിടെ കാണിക്കും
-      ),
-      
-      // പേജിന്റെ ഉള്ളടക്കം (Body)
-      body: Center(
-        // വരിവരിയായി കാണിക്കാൻ Column ഉപയോഗിക്കുന്നു
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // നടുവിലേക്ക് ആക്കാൻ
-          children: <Widget>[
-            const Text(
-              'നിങ്ങൾ ബട്ടൺ അമർത്തിയ തവണ:',
-              style: TextStyle(fontSize: 18), // അക്ഷരത്തിന്റെ വലിപ്പം
+    return GestureDetector(
+      onTap: jump,
+      child: Scaffold(
+        backgroundColor: Colors.blue.shade300,
+        body: Stack(
+          children: [
+            Align(
+              alignment: Alignment(0, birdY),
+              child: const Icon(
+                Icons.flutter_dash,
+                size: 50,
+                color: Colors.yellow,
+              ),
             ),
-            // നമ്മുടെ കൗണ്ടർ നമ്പർ ഇവിടെ കാണിക്കുന്നു
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium, // വലിയ അക്ഷരത്തിൽ
+
+            Align(
+              alignment: Alignment(pipeX, -1),
+              child: Container(
+                width: 60,
+                height: MediaQuery.of(context).size.height * pipeHeight,
+                color: Colors.green,
+              ),
             ),
+
+            Align(
+              alignment: Alignment(pipeX, 1),
+              child: Container(
+                width: 60,
+                height: MediaQuery.of(context).size.height * pipeHeight,
+                color: Colors.green,
+              ),
+            ),
+
+            Positioned(
+              top: 60,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
+                  'Score: $score',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+            if (!gameStarted)
+              const Center(
+                child: Text(
+                  'TAP TO START',
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+            if (gameOver)
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'GAME OVER',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: startGame,
+                      child: const Text('RESTART'),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
-      ),
-      
-      // താഴെ കാണുന്ന + ചിഹ്നമുള്ള ബട്ടൺ
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter, // അമർത്തുമ്പോൾ നമ്പർ കൂട്ടാനുള്ള ഫംഗ്‌ഷൻ വിളിക്കുന്നു
-        tooltip: 'കൂട്ടുക', // അമർത്തിപ്പിടിച്ചാൽ കാണിക്കുന്ന പേര്
-        child: const Icon(Icons.add), // + ഐക്കൺ
       ),
     );
   }
