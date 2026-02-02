@@ -1,32 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const FlappyApp());
-}
-
-class FlappyApp extends StatelessWidget {
-  const FlappyApp({super.key});
+class HomeScreen extends StatefulWidget {
+  final String title;
+  // കൺസ്ട്രക്റ്ററിൽ ടൈറ്റിൽ കൂടി ഉൾപ്പെടുത്തി
+  const HomeScreen({super.key, required this.title});
 
   @override
-  Widget build(BuildContext context) {
-    // MaterialApp-ൽ നിന്ന് const ഒഴിവാക്കി, home-ൽ ഉള്ള വിഡ്ജറ്റിന് const നൽകി.
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ഫ്ലാപ്പി ബേർഡ്',
-      home: const FlappyGame(),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class FlappyGame extends StatefulWidget {
-  const FlappyGame({super.key});
-
-  @override
-  State<FlappyGame> createState() => _FlappyGameState();
-}
-
-class _FlappyGameState extends State<FlappyGame> {
+class _HomeScreenState extends State<HomeScreen> {
   // ഗെയിം വേരിയബിളുകൾ
   double birdY = 0;
   double birdVelocity = 0;
@@ -43,7 +27,6 @@ class _FlappyGameState extends State<FlappyGame> {
 
   Timer? gameTimer;
 
-  // ഗെയിം തുടങ്ങാനുള്ള ഫംഗ്ഷൻ
   void startGame() {
     gameStarted = true;
     gameOver = false;
@@ -58,19 +41,16 @@ class _FlappyGameState extends State<FlappyGame> {
         birdVelocity += gravity;
         birdY += birdVelocity;
 
-        // പൈപ്പുകൾ ചലിപ്പിക്കുന്നു
         pipeX -= 0.02;
         if (pipeX < -1.5) {
           pipeX = 1.5;
           score++;
         }
 
-        // ഗെയിം ഓവർ കണ്ടീഷനുകൾ (മുകളിലോ താഴെയോ തട്ടിയാൽ)
         if (birdY > 1 || birdY < -1) {
           endGame();
         }
 
-        // പൈപ്പിൽ തട്ടിയാൽ
         if (pipeX.abs() < 0.15) {
           if (birdY < -pipeGap + pipeHeight ||
               birdY > pipeGap - pipeHeight) {
@@ -81,7 +61,6 @@ class _FlappyGameState extends State<FlappyGame> {
     });
   }
 
-  // ചാടാനുള്ള ഫംഗ്ഷൻ
   void jump() {
     if (!gameStarted) {
       startGame();
@@ -90,7 +69,6 @@ class _FlappyGameState extends State<FlappyGame> {
     }
   }
 
-  // ഗെയിം അവസാനിപ്പിക്കുന്നു
   void endGame() {
     gameTimer?.cancel();
     gameOver = true;
@@ -110,7 +88,7 @@ class _FlappyGameState extends State<FlappyGame> {
         backgroundColor: Colors.blue.shade300,
         body: Stack(
           children: [
-            // പക്ഷി (Flutter Dash Icon)
+            // ബേർഡ് ഐക്കൺ
             Align(
               alignment: Alignment(0, birdY),
               child: const Icon(
@@ -148,29 +126,36 @@ class _FlappyGameState extends State<FlappyGame> {
               ),
             ),
 
-            // സ്കോർ ബോർഡ്
+            // സ്കോർ ഡിസ്‌പ്ലേ
             Positioned(
               top: 60,
               left: 0,
               right: 0,
               child: Center(
-                child: Text(
-                  'Score: $score',
-                  style: const TextStyle(
-                    fontSize: 35,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    shadows: [Shadow(blurRadius: 5, color: Colors.black)],
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.title, // app_root-ൽ നിന്ന് വരുന്ന ടൈറ്റിൽ
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    Text(
+                      'Score: $score',
+                      style: const TextStyle(
+                        fontSize: 35,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        shadows: [Shadow(blurRadius: 5, color: Colors.black)],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
 
-            // ഗെയിം തുടങ്ങാൻ ആവശ്യപ്പെടുന്ന മെസ്സേജ്
             if (!gameStarted)
               const Center(
                 child: Text(
-                  'കളിക്കാൻ ടാപ്പ് ചെയ്യുക',
+                  'തുടങ്ങാൻ ടാപ്പ് ചെയ്യുക',
                   style: TextStyle(
                     fontSize: 26,
                     color: Colors.white,
@@ -179,30 +164,24 @@ class _FlappyGameState extends State<FlappyGame> {
                 ),
               ),
 
-            // ഗെയിം ഓവർ സ്ക്രീൻ
             if (gameOver)
               Center(
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        'കളി കഴിഞ്ഞു!',
+                        'GAME OVER',
                         style: TextStyle(
                           fontSize: 32,
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'നിങ്ങളുടെ സ്കോർ: $score',
-                        style: const TextStyle(fontSize: 20),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -211,7 +190,7 @@ class _FlappyGameState extends State<FlappyGame> {
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                         ),
-                        child: const Text('വീണ്ടും കളിക്കുക'),
+                        child: const Text('RESTART'),
                       ),
                     ],
                   ),
